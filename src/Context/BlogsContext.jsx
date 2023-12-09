@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { createContext } from "react";
 import axios from "axios";
-import { baseUrl } from "../Url";
+import { baseUrl } from "../API";
 
-export const BlogsContext = createContext(null);
+export const BlogsContext = createContext();
 
 const Context = ({ children }) => {
   const [loading, isLoading] = useState(true);
   const [post, setPost] = useState()
   const [pageNo, setPageNo] = useState(1);
-  const [totalpages, setTotalPages] = useState();
+ 
 
   const fetchData = async (pageNum) => {
     try {
       isLoading(true);
       const fetch = await axios.get(`${baseUrl}?page=${pageNum}`);
+      console.log("Api Data:- ",fetch.data);
       const response = fetch.data.posts;
       setPost(response); 
-      console.log("In context", response);
+      console.log("Posts In API :-", response);
     } catch (error) {
       console.log("Error in API:", error);
     }
@@ -34,9 +35,7 @@ const Context = ({ children }) => {
     post,
     setPost,
     pageNo,
-    setPageNo,
-    totalpages,
-    setTotalPages,
+    setPageNo
   };
 
   return (
