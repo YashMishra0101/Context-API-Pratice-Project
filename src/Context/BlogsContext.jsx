@@ -7,25 +7,23 @@ export const BlogsContext = createContext();
 
 const Context = ({ children }) => {
   const [loading, isLoading] = useState(true);
-  const [post, setPost] = useState()
+  const [post, setPost] = useState();
   const [pageNo, setPageNo] = useState(1);
- 
-
-  const fetchData = async (pageNum) => {
-    try {
-      isLoading(true);
-      const fetch = await axios.get(`${baseUrl}?page=${pageNum}`);
-      console.log("Api Data:- ",fetch.data);
-      const response = fetch.data.posts;
-      setPost(response); 
-      console.log("Posts In API :-", response);
-    } catch (error) {
-      console.log("Error in API:", error);
-    }
-    isLoading(false);
-  };
 
   useEffect(() => {
+    const fetchData = async (pageNum) => {
+      try {
+        const fetch = await axios.get(`${baseUrl}?page=${pageNum}`);
+        console.log("Api Data:- ", fetch.data);
+        const response = fetch.data.posts;
+        setPost(response);
+        console.log("Posts In API :-", response);
+      } catch (error) {
+        console.log("Error in API:", error);
+      } finally {
+        isLoading(false);
+      }
+    };
     fetchData(pageNo);
   }, [pageNo]);
 
@@ -35,13 +33,11 @@ const Context = ({ children }) => {
     post,
     setPost,
     pageNo,
-    setPageNo
+    setPageNo,
   };
 
   return (
-    <BlogsContext.Provider value={values}>
-      {children}
-    </BlogsContext.Provider>
+    <BlogsContext.Provider value={values}>{children}</BlogsContext.Provider>
   );
 };
 
